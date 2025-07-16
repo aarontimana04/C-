@@ -1,0 +1,12 @@
+# Archivos generados por compilación
+*.o
+*.out
+*.exe
+
+# Directorios de build
+build/
+bin/
+
+# Archivos específicos del IDE (ej: VS Code)
+.vscode/
+.DS_Store  # Archivos temporales de macOS

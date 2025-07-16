@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Estados</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .diagram-container {
+            position: relative;
+            height: 600px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .state {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .state:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .state-0 {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            top: 50px;
+            left: 100px;
+        }
+        
+        .state-1 {
+            background: linear-gradient(135deg, #4834d4, #686de0);
+            top: 200px;
+            left: 300px;
+        }
+        
+        .state-2 {
+            background: linear-gradient(135deg, #00a8ff, #0097e6);
+            top: 350px;
+            left: 500px;
+        }
+        
+        .state-3 {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            top: 50px;
+            left: 700px;
+        }
+        
+        .arrow {
+            position: absolute;
+            pointer-events: none;
+        }
+        
+        .arrow-line {
+            stroke: #333;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        
+        .arrow-curved {
+            stroke: #666;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            stroke-dasharray: 5,5;
+        }
+        
+        .self-loop {
+            stroke: #999;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+            stroke-dasharray: 3,3;
+        }
+        
+        .label {
+            position: absolute;
+            background: rgba(255,255,255,0.9);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #333;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .legend {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .legend h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .legend-item {
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+        
+        .action-avanza { color: #28a745; font-weight: bold; }
+        .action-retrocede { color: #dc3545; font-weight: bold; }
+        .action-espera { color: #ffc107; font-weight: bold; }
+        
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 250px;
+            display: none;
+        }
+        
+        .info-panel.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Diagrama de Estados con Transiciones Probabilísticas</h1>
+        
+        <div class="diagram-container">
+            <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                     refX="9" refY="3.5" orient="auto" fill="#333">
+                        <polygon points="0 0, 10 3.5, 0 7" />
+                    </marker>
+                </defs>
+                
+                <!-- Transiciones principales -->
+                <!-- Estado 0 a 1 -->
+                <path d="M 180 90 Q 220 120 300 200" class="arrow-line"/>
+                
+                <!-- Estado 1 a 2 -->
+                <path d="M 380 240 Q 420 270 500 350" class="arrow-line"/>
+                
+                <!-- Estado 2 a 3 -->
+                <path d="M 580 350 Q 620 280 700 130" class="arrow-line"/>
+                
+                <!-- Estado 1 a 0 -->
+                <path d="M 300 200 Q 260 170 180 90" class="arrow-curved"/>
+                
+                <!-- Estado 2 a 1 -->
+                <path d="M 500 350 Q 460 320 380 240" class="arrow-curved"/>
+                
+                <!-- Auto-loops -->
+                <circle cx="70" cy="40" r="25" class="self-loop"/>
+                <circle cx="330" cy="170" r="25" class="self-loop"/>
+                <circle cx="530" cy="320" r="25" class="self-loop"/>
+            </svg>
+            
+            <!-- Estados -->
+            <div class="state state-0" data-state="0">0</div>
+            <div class="state state-1" data-state="1">1</div>
+            <div class="state state-2" data-state="2">2</div>
+            <div class="state state-3" data-state="3">3</div>
+            
+            <!-- Etiquetas de transiciones -->
+            <div class="label" style="top: 150px; left: 240px;">
+                <span class="action-avanza">avanza</span><br>90% (-0.1)
+            </div>
+            
+            <div class="label" style="top: 300px; left: 440px;">
+                <span class="action-avanza">avanza</span><br>90% (-0.1)
+            </div>
+            
+            <div class="label" style="top: 220px; left: 640px;">
+                <span class="action-avanza">avanza</span><br>90% (+1.0)
+            </div>
+            
+            <div class="label" style="top: 130px; left: 240px;">
+                <span class="action-retrocede">retrocede</span><br>90% (-0.1)
+            </div>
+            
+            <div class="label" style="top: 280px; left: 440px;">
+                <span class="action-retrocede">retrocede</span><br>90% (-0.1)
+            </div>
+            
+            <div class="label" style="top: 20px; left: 40px;">
+                <span class="action-espera">espera</span><br>100% (-0.1)
+            </div>
+            
+            <div class="label" style="top: 140px; left: 300px;">
+                <span class="action-espera">espera</span><br>100% (-0.1)
+            </div>
+            
+            <div class="label" style="top: 290px; left: 500px;">
+                <span class="action-espera">espera</span><br>100% (-0.1)
+            </div>
+            
+            <!-- Panel de información -->
+            <div class="info-panel" id="infoPanel">
+                <h4 id="stateTitle">Estado 0</h4>
+                <div id="stateInfo"></div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>Leyenda</h3>
+            <div class="legend-item">
+                <strong>Estados:</strong> 0 (Inicial), 1 (Intermedio), 2 (Intermedio), 3 (Terminal)
+            </div>
+            <div class="legend-item">
+                <strong>Acciones:</strong> 
+                <span class="action-avanza">Avanza</span>, 
+                <span class="action-retrocede">Retrocede</span>, 
+                <span class="action-espera">Espera</span>
+            </div>
+            <div class="legend-item">
+                <strong>Formato:</strong> Probabilidad% (Recompensa)
+            </div>
+            <div class="legend-item">
+                <strong>Líneas sólidas:</strong> Transiciones principales
+            </div>
+            <div class="legend-item">
+                <strong>Líneas punteadas:</strong> Transiciones de retorno/auto-loops
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const stateInfo = {
+            0: {
+                title: "Estado 0 - Inicial",
+                info: `
+                    <strong>Avanza:</strong> 90% → Estado 1 (-0.1), 10% → Estado 0 (-0.1)<br>
+                    <strong>Retrocede:</strong> 100% → Estado 0 (-0.1)<br>
+                    <strong>Espera:</strong> 100% → Estado 0 (-0.1)
+                `
+            },
+            1: {
+                title: "Estado 1 - Intermedio",
+                info: `
+                    <strong>Avanza:</strong> 90% → Estado 2 (-0.1), 10% → Estado 1 (-0.1)<br>
+                    <strong>Retrocede:</strong> 90% → Estado 0 (-0.1), 10% → Estado 1 (-0.1)<br>
+                    <strong>Espera:</strong> 100% → Estado 1 (-0.1)
+                `
+            },
+            2: {
+                title: "Estado 2 - Intermedio",
+                info: `
+                    <strong>Avanza:</strong> 90% → Estado 3 (+1.0), 10% → Estado 2 (-0.1)<br>
+                    <strong>Retrocede:</strong> 90% → Estado 1 (-0.1), 10% → Estado 2 (-0.1)<br>
+                    <strong>Espera:</strong> 100% → Estado 2 (-0.1)
+                `
+            },
+            3: {
+                title: "Estado 3 - Terminal",
+                info: `
+                    <strong>Estado terminal:</strong> No se toman más acciones.<br>
+                    Este es el estado objetivo con recompensa positiva.
+                `
+            }
+        };
+
+        document.querySelectorAll('.state').forEach(state => {
+            state.addEventListener('mouseenter', function() {
+                const stateNum = this.getAttribute('data-state');
+                const panel = document.getElementById('infoPanel');
+                const title = document.getElementById('stateTitle');
+                const info = document.getElementById('stateInfo');
+                
+                title.textContent = stateInfo[stateNum].title;
+                info.innerHTML = stateInfo[stateNum].info;
+                panel.classList.add('active');
+            });
+            
+            state.addEventListener('mouseleave', function() {
+                document.getElementById('infoPanel').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
